@@ -8,8 +8,7 @@ env:
 
 before_script:
   - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-  - VERSION="$(git describe --abbrev=0 --tags --exact-match 2> /dev/null)"
-  - [[ -z "${VERSION}" ]] && echo 'FAIL: Not tag on current commit'; exit 1 || echo "Building version ${VERSION}"
+  - VERSION="$(git describe --abbrev=0 --tags --exact-match)"
 
 script:
   - echo Building version ${VERSION}
