@@ -1,0 +1,28 @@
+sudo: required
+services:
+  - docker
+env:
+  global:
+    - IMAGE_NAME=${DOCKER_USERNAME}/graalvm
+
+before_script:
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+  # - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - VERSION="$(git describe --abbrev=0 --tags)"
+
+script:
+  - docker build --pull --cache-from "$IMAGE_NAME" --tag "${IMAGE_NAME}:${VERSION}" .
+
+after_script:
+  - docker images
+  - docker run --rm -it "${IMAGE_NAME}:${VERSION}"
+
+# before_deploy:
+#   - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
+#   - docker tag "$IMAGE_NAME" "${IMAGE_NAME}:latest"
+#   - docker tag "$IMAGE_NAME" "${IMAGE_NAME}:${version}"
+deploy:
+  provider: script
+  script: docker push "${IMAGE_NAME}:${version}"
+  on:
+    branch: master
