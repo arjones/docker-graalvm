@@ -2,12 +2,10 @@ FROM ubuntu:18.04
 
 ARG GRAALVM_VERSION
 
-WORKDIR /app
-
 RUN apt-get update && \
   apt-get install -y curl && \
   curl -Ls "https://github.com/oracle/graal/releases/download/vm-${GRAALVM_VERSION}/graalvm-ce-${GRAALVM_VERSION}-linux-amd64.tar.gz" | \
-  tar zxv -C /usr/local/ && \
+  tar zx -C /usr/local/ && \
   rm -f /usr/local/graalvm-${GRAALVM_VERSION}/src.zip && \
   ln -s /usr/local/graalvm-${GRAALVM_VERSION} /usr/local/graalvm && \
   rm -fr /var/lib/apt
